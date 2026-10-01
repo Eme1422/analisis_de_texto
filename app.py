@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from textblob import TextBlob
 import re
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 
 # Configuración de la página
 st.set_page_config(
@@ -119,12 +119,11 @@ def contar_palabras(texto):
     contador_ordenado = dict(sorted(contador.items(), key=lambda x: x[1], reverse=True))
     return contador_ordenado, palabras_filtradas
 
-translator = Translator()
-
+# Función para traducir texto usando deep-translator
 def traducir_texto(texto):
     try:
-        traduccion = translator.translate(texto, src='es', dest='en')
-        return traduccion.text
+        traduccion = GoogleTranslator(source='auto', target='en').translate(texto)
+        return traduccion
     except Exception as e:
         st.error(f"Error al traducir: {e}")
         return texto
@@ -159,11 +158,10 @@ def procesar_texto(texto):
         "texto_traducido": texto_ingles
     }
 
-# Función visual mejorada para mostrar resultados
+# Función visual para mostrar resultados
 def crear_visualizaciones(resultados):
     st.markdown("### 📊 Métrica Global")
     
-    # Tarjetas Métricas
     m1, m2, m3 = st.columns(3)
     
     sent = resultados["sentimiento"]
@@ -205,7 +203,6 @@ def crear_visualizaciones(resultados):
             else:
                 st.info("No hay suficiente texto para mostrar palabras frecuentes.")
 
-    # Texto traducido con acordeón mejorado
     st.subheader("📄 Comparativa de Traducción")
     with st.expander("Ver vista paralela (Español / Inglés)"):
         col_orig, col_trad = st.columns(2)
@@ -216,7 +213,6 @@ def crear_visualizaciones(resultados):
             st.markdown("**Traducción (EN):**")
             st.success(resultados["texto_traducido"])
 
-    # Análisis de frases por tarjetas ordenadas
     st.subheader("🔍 Análisis Detallado por Frase")
     if resultados["frases"]:
         for i, frase_dict in enumerate(resultados["frases"][:10], 1):
