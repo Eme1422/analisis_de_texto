@@ -7,47 +7,73 @@ from deep_translator import GoogleTranslator
 # Configuración de la página
 st.set_page_config(
     page_title="Analizador de Texto",
-    page_icon="✨",
+    page_icon="🔮",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS personalizados para mejorar el diseño
+# Estilos CSS personalizados con temática Morado Claro / Lavanda
 st.markdown("""
     <style>
-    /* Estilo para las tarjetas de métricas */
-    .metric-card {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 15px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        border: 1px solid #e9ecef;
-        margin-bottom: 10px;
+    /* Fondo principal lavanda muy claro */
+    .stApp {
+        background-color: #F8F7FF;
     }
     
-    /* Personalización del área de texto */
+    /* Barra lateral morada */
+    [data-testid="stSidebar"] {
+        background-color: #F0EDFE;
+        border-right: 1px solid #DDD6FE;
+    }
+    
+    /* Títulos y texto destacado */
+    h1, h2, h3 {
+        color: #4C3575 !important;
+    }
+    
+    /* Estilo para los botones principales */
+    .stButton>button {
+        background-color: #6C5CE7 !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+    }
+    .stButton>button:hover {
+        background-color: #5B4BC4 !important;
+        box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3) !important;
+    }
+    
+    /* Personalización de text area y file uploader */
     .stTextArea textarea {
         border-radius: 10px;
+        border: 1px solid #C4B5FD;
+        background-color: #FFFFFF;
+    }
+    .stTextArea textarea:focus {
+        border-color: #6C5CE7;
+        box-shadow: 0 0 0 1px #6C5CE7;
     }
 
     /* Estilo de los contenedores de frases */
     .phrase-box-pos {
-        border-left: 5px solid #28a745;
-        background-color: rgba(40, 167, 69, 0.05);
+        border-left: 5px solid #10B981;
+        background-color: #ECFDF5;
         padding: 12px 15px;
         border-radius: 4px 8px 8px 4px;
         margin-bottom: 12px;
     }
     .phrase-box-neg {
-        border-left: 5px solid #dc3545;
-        background-color: rgba(220, 53, 69, 0.05);
+        border-left: 5px solid #EF4444;
+        background-color: #FEF2F2;
         padding: 12px 15px;
         border-radius: 4px 8px 8px 4px;
         margin-bottom: 12px;
     }
     .phrase-box-neu {
-        border-left: 5px solid #6c757d;
-        background-color: rgba(108, 117, 125, 0.05);
+        border-left: 5px solid #8B5CF6;
+        background-color: #F5F3FF;
         padding: 12px 15px;
         border-radius: 4px 8px 8px 4px;
         margin-bottom: 12px;
@@ -55,8 +81,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Encabezado principal estilizado
-st.title("✨ Analizador de Texto Inteligente")
+# Encabezado principal
+st.title("🔮 Analizador de Texto Inteligente")
 st.caption("Procesamiento de Lenguaje Natural simplificado con TextBlob & Streamlit")
 st.divider()
 
@@ -119,7 +145,7 @@ def contar_palabras(texto):
     contador_ordenado = dict(sorted(contador.items(), key=lambda x: x[1], reverse=True))
     return contador_ordenado, palabras_filtradas
 
-# Función para traducir texto usando deep-translator
+# Función para traducir texto
 def traducir_texto(texto):
     try:
         traduccion = GoogleTranslator(source='auto', target='en').translate(texto)
@@ -160,7 +186,7 @@ def procesar_texto(texto):
 
 # Función visual para mostrar resultados
 def crear_visualizaciones(resultados):
-    st.markdown("### 📊 Métrica Global")
+    st.markdown("### 📊 Métricas Globales")
     
     m1, m2, m3 = st.columns(3)
     
@@ -177,7 +203,7 @@ def crear_visualizaciones(resultados):
 
     m1.metric("Sentimiento", f"{sent:.2f}", delta=estado_sent)
     m2.metric("Subjetividad", f"{subj:.2f}", delta=estado_subj, delta_color="off")
-    m3.metric("Total Palabras Analizadas", len(resultados["palabras"]))
+    m3.metric("Total Palabras", len(resultados["palabras"]))
 
     st.divider()
 
@@ -237,7 +263,7 @@ def crear_visualizaciones(resultados):
                 <div class="{css_class}">
                     <small><b>Frase {i}</b> — {tag} (Polaridad: {sent_f:.2f})</small><br>
                     <b>Original:</b> "{frase_original}"<br>
-                    <span style="color: #6c757d;"><b>Traducción:</b> "{frase_traducida}"</span>
+                    <span style="color: #6C5CE7;"><b>Traducción:</b> "{frase_traducida}"</span>
                 </div>
                 """, unsafe_allow_html=True)
             except:
